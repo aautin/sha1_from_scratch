@@ -3,7 +3,7 @@
 
 # include <stdint.h>
 
-union Chunk
+typedef union u_chunk
 {
 	uint8_t		bytes[64];
 	uint32_t	words[16];
@@ -13,6 +13,6 @@ union Chunk
 		uint64_t	dummy[7];
 		uint64_t	it;
 	}	length;
-};
+}	t_chunk;
 
 #endif

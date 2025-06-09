@@ -2,7 +2,7 @@ NAME=sha1
 CC=cc
 CFLAGS=-Wall -Werror -Wextra -g
 
-FILES= main parsing
+FILES= main list parsing
 
 INC_DIR=inc
 SRC_DIR=src

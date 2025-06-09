@@ -27,7 +27,7 @@ void addback_element(t_list** head, t_list* new)
 
 void list_clear(t_list** list)
 {
-	while (list != NULL) {
+	while (*list != NULL) {
 		t_list* next = (*list)->next;
 
 		free(*list);

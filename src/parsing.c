@@ -28,23 +28,28 @@ char* get_content_from_fd(int fd)
 	return content;
 }
 
-void mark_chunk(uint8_t* chunk_bytes, size_t prev_index)
+void mark_chunk(uint8_t* chunk_bytes, size_t index)
 {
-	size_t byte_index = (prev_index + 1) / 8;
-	size_t bit_position = (prev_index + 1) % 8;
+	size_t byte_index = index / 8;
+	size_t bit_position = index % 8;
 
-	chunk_bytes[byte_index] |= (1 << bit_position);
+	chunk_bytes[byte_index] |= (1 << (7 - bit_position));
 }
 
-size_t put_bits_in_chunk(uint8_t* chunk, char* src, size_t put_length)
+size_t put_bits_in_chunk(uint8_t* chunk, char* src, size_t index_from, size_t put_length)
 {
 	size_t index = 0;
 	while (index < put_length && index < 512) {
-		size_t	byte_index = (512 - index + 1) / 8;
-		size_t	bit_position = (512 - index + 1) % 8;
-		bool	value = *src; // To be continued
+		size_t	src_byte = (index_from + index) / 8;
+		size_t	src_bit = (index_from + index) % 8;
+		bool	value = (src[src_byte] >> (7 - src_bit)) & 1;
+		
+		size_t	chunk_byte = index / 8;
+		size_t	chunk_bit = index % 8;
 
-		chunk[byte_index] |= (value << bit_position);
+		chunk[chunk_byte] |= (value << (7 - chunk_bit));
+
+		index++;
 	}
 
 	return index;
@@ -53,19 +58,19 @@ size_t put_bits_in_chunk(uint8_t* chunk, char* src, size_t put_length)
 t_list* get_msg_from_content(char* content)
 {
 	t_list*	msg = NULL;
-	bool	is_marked = false;
-	size_t	length = strlen(content);
+	size_t	bit_index = 0, len = strlen(content), bit_len = len * 8;
 	
-	size_t	bits_length = length * 8;
-	while ((bits_length + !is_marked) > 448) {
+	bool	is_marked = false;
+	while ((bit_len + !is_marked) > 448) {
 		t_chunk	chunk;
 		memset(&chunk, 0, sizeof(t_chunk));
 
-		size_t	bits_put = put_bits_in_chunk(chunk.bytes, content, bits_length);
-		bits_length -= bits_put;
+		size_t	bits_put = put_bits_in_chunk(chunk.bytes, content, bit_index, bit_len);
+		bit_len -= bits_put;
+		bit_index += bits_put;
 
-		if (!is_marked && bits_length == 0 && bits_put < 512) {
-			mark_chunk(chunk.bytes, 512 - bits_put + 1);
+		if (!is_marked && bit_len == 0 && bits_put < 512) {
+			mark_chunk(chunk.bytes, bits_put);
 			is_marked = true;
 		}
 
@@ -76,14 +81,14 @@ t_list* get_msg_from_content(char* content)
 		t_chunk	chunk;
 		memset(&chunk, 0, sizeof(t_chunk));
 	
-		size_t	bits_put = put_bits_in_chunk(chunk.bytes, content, bits_length);
-		bits_length -= bits_put;
+		size_t	bits_put = put_bits_in_chunk(chunk.bytes, content, bit_index, bit_len);
+		bit_len -= bits_put;
 	
 		if (!is_marked) {
-			mark_chunk(chunk.bytes, 512 - bits_put + 1);
+			mark_chunk(chunk.bytes, bits_put);
 			is_marked = true;
 		}
-		chunk.length.it = length;
+		chunk.len.it = len;
 	
 		addback_element(&msg, new_element(chunk));
 	}

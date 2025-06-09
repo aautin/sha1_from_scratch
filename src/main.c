@@ -16,10 +16,11 @@ int main(int argc, char** argv)
 		else {
 			char*	content = get_content_from_fd(fd);
 			if (content == NULL)
-			perror(file);
+				perror(file);
 			else {
 				t_list*	message = get_msg_from_content(content);
-				printf("%s:\n%s", file, content);
+				// To be continued...
+
 				list_clear(&message);
 			}
 			free(content);

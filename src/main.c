@@ -4,6 +4,7 @@
 
 #include "chunk.h"
 #include "parsing.h"
+#include "sha1.h"
 
 int main(int argc, char** argv)
 {
@@ -19,7 +20,9 @@ int main(int argc, char** argv)
 				perror(file);
 			else {
 				t_list*	message = get_msg_from_content(content);
-				// To be continued...
+				
+				t_sha1	result;
+				sha1(message, result);
 
 				list_clear(&message);
 			}

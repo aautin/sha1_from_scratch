@@ -1,5 +1,7 @@
 #include "sha1.h"
 
+#include "endian.h"
+
 uint32_t choice(uint32_t b, uint32_t c, uint32_t d)
 {
 	return (b & c) | ((~b) & d);
@@ -15,6 +17,10 @@ uint32_t majority(uint32_t b, uint32_t c, uint32_t d)
 
 void define_chunk_words(uint32_t* words)
 {
+	for (int i = 0; i < 16; ++i) {
+		words[i] = endian32(words[i]);
+	}
+	
 	for (size_t i = 16; i < 80; ++i) {
 		uint32_t x = words[i - 3] ^ words[i - 8] ^ words[i - 14] ^ words[i - 16];
 		words[i] = ROTL(x, 1);

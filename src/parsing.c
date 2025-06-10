@@ -90,7 +90,7 @@ t_list* get_msg_from_content(char* content)
 			mark_chunk(chunk.bytes, bits_put);
 			is_marked = true;
 		}
-		chunk.len.it = endian64(len);
+		chunk.len.it = endian64(len * 8);
 	
 		addback_element(&msg, new_element(chunk));
 	}

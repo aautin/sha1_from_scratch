@@ -11,12 +11,6 @@
 
 int main(int argc, char** argv)
 {
-	#ifdef __ORDER_LITTLE_ENDIAN__
-		printf("Little-endian ordered CPU, swapping multi-bytes types data.\n");
-	#else
-		printf("Big-endian ordered CPU, not swapping multi-bytes types data.\n");
-	#endif
-
 	for (int i = 1; i < argc; ++i) {
 		char*	file = argv[i];
 
@@ -29,12 +23,11 @@ int main(int argc, char** argv)
 				perror(file);
 			else {
 				t_list*	message = get_msg_from_content(content);
-				print_chunks(message);
 
 				t_sha1	hash;
 				sha1(message, hash);
 				
-				printf("%08x%08x%08x%08x%08x : %s\n", hash[0], hash[1], hash[2], hash[3], hash[4], file);
+				printf("%08x%08x%08x%08x%08x  %s\n", hash[0], hash[1], hash[2], hash[3], hash[4], file);
 
 				list_clear(&message);
 			}

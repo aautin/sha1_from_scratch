@@ -6,6 +6,8 @@
 #include "parsing.h"
 #include "sha1.h"
 
+#include "debug.h"
+
 int main(int argc, char** argv)
 {
 	for (int i = 1; i < argc; ++i) {
@@ -20,9 +22,11 @@ int main(int argc, char** argv)
 				perror(file);
 			else {
 				t_list*	message = get_msg_from_content(content);
+
+				t_sha1	hash;
+				sha1(message, hash);
 				
-				t_sha1	result;
-				sha1(message, result);
+				printf("%08x%08x%08x%08x%08x : %s\n", hash[0], hash[1], hash[2], hash[3], hash[4], file);
 
 				list_clear(&message);
 			}

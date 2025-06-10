@@ -5,7 +5,7 @@
 
 typedef union u_chunk
 {
-	uint8_t		bytes[64];
+	uint8_t		bytes[320];
 	uint32_t	words[80];
 	
 	struct

@@ -1,8 +1,9 @@
 NAME=sha1
+
 CC=cc
 CFLAGS=-Wall -Werror -Wextra -g
 
-FILES= debug main list parsing sha1
+FILES= debug main list parsing sha1 endian
 
 INC_DIR=inc
 SRC_DIR=src

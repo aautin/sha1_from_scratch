@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "chunk.h"
+#include "endian.h"
 #include "list.h"
 #include "parsing.h"
 
@@ -58,7 +59,8 @@ size_t put_bits_in_chunk(uint8_t* chunk, char* src, size_t index_from, size_t pu
 t_list* get_msg_from_content(char* content)
 {
 	t_list*	msg = NULL;
-	size_t	bit_index = 0, len = strlen(content), bit_len = len * 8;
+	size_t	bit_index = 0;
+	uint64_t len = strlen(content), bit_len = len * 8;
 	
 	bool	is_marked = false;
 	while ((bit_len + !is_marked) > 448) {
@@ -88,7 +90,7 @@ t_list* get_msg_from_content(char* content)
 			mark_chunk(chunk.bytes, bits_put);
 			is_marked = true;
 		}
-		chunk.len.it = len;
+		chunk.len.it = endian64(len);
 	
 		addback_element(&msg, new_element(chunk));
 	}

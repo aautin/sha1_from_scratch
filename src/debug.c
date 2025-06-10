@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "endian.h"
 #include "list.h"
 
 void print_chunks(t_list* message)
@@ -10,7 +11,7 @@ void print_chunks(t_list* message)
 			size_t i;
 			for (i = 0; i < 64; ++i)
 				printf("%#08x ", message->chunk.bytes[i]);
-			printf("\nlength = %ld\n", message->chunk.len.it);
+			printf("\nlength = %ld\n", endian64(message->chunk.len.it));
 		}
 		else {
 			for (int i = 0; i < 64; ++i)

@@ -1,3 +1,4 @@
 *.o
 sha1
+libsha1.a
 .vscode

@@ -1,21 +1,32 @@
-NAME=sha1
+LIB=libsha1.a
+PRGM=sha1
 
 CC=cc
 CFLAGS=-Wall -Werror -Wextra -g
-
-FILES= debug main list parsing sha1 endian
 
 INC_DIR=inc
 SRC_DIR=src
 OBJ_DIR=obj
 
-SRC=$(addsuffix .c, $(addprefix $(SRC_DIR)/, $(FILES)))
-OBJ=$(addsuffix .o, $(addprefix $(OBJ_DIR)/, $(FILES)))
+LIB_FILES=debug list parsing sha1 endian
+PRGM_FILES=$(LIB_FILES) main
+MAIN_FILE=$(OBJ_DIR)/main.o
 
-all: $(NAME)
+LIB_SRC=$(addsuffix .c, $(addprefix $(SRC_DIR)/, $(LIB_FILES)))
+LIB_OBJ=$(addsuffix .o, $(addprefix $(OBJ_DIR)/, $(LIB_FILES)))
 
-$(NAME): $(OBJ_DIR) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $@
+PRGM_SRC=$(addsuffix .c, $(addprefix $(SRC_DIR)/, $(PRGM_FILES)))
+PRGM_OBJ=$(addsuffix .o, $(addprefix $(OBJ_DIR)/, $(PRGM_FILES)))
+
+all: $(LIB)
+
+lib: $(LIB)
+program: $(PRGM)
+
+$(LIB): $(OBJ_DIR) $(LIB_OBJ)
+	ar rcs $@ $(LIB_OBJ)
+$(PRGM): $(LIB) $(MAIN_FILE)
+	$(CC) $(CFLAGS) $(MAIN_FILE) -L. -l$(PRGM) -o $@
 
 $(OBJ_DIR):
 	mkdir -p $@
@@ -29,4 +40,5 @@ clean:
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(PRGM)
+	rm -f $(LIB)

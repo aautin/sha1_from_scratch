@@ -1,6 +1,8 @@
-#include "sha1.h"
+#include <stdlib.h>
 
 #include "endian.h"
+#include "parsing.h"
+#include "sha1.h"
 
 uint32_t choice(uint32_t b, uint32_t c, uint32_t d)
 {
@@ -27,8 +29,12 @@ void define_chunk_words(uint32_t* words)
 	}
 }
 
-void sha1(t_list *msg, uint32_t* hash)
+bool sha1(uint8_t* content, uint64_t bit_len, uint32_t* hash)
 {
+	t_list* msg	= get_msg_from_content(content, bit_len);
+	if (msg == NULL)
+		return false;
+
 	hash[0] = 0x67452301;
 	hash[1] = 0xefcdab89;
 	hash[2] = 0x98badcfe;
@@ -73,4 +79,7 @@ void sha1(t_list *msg, uint32_t* hash)
 		hash[3] += d;
 		hash[4] += e;
 	}
+
+	list_clear(&msg);
+	return true;
 }

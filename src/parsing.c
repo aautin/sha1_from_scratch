@@ -37,7 +37,7 @@ void mark_chunk(uint8_t* chunk_bytes, size_t index)
 	chunk_bytes[byte_index] |= (1 << (7 - bit_position));
 }
 
-size_t put_bits_in_chunk(uint8_t* chunk, char* src, size_t index_from, size_t put_length)
+size_t put_bits_in_chunk(uint8_t* chunk, uint8_t* src, size_t index_from, size_t put_length)
 {
 	size_t index = 0;
 	while (index < put_length && index < 512) {
@@ -56,11 +56,10 @@ size_t put_bits_in_chunk(uint8_t* chunk, char* src, size_t index_from, size_t pu
 	return index;
 }
 
-t_list* get_msg_from_content(char* content)
+t_list* get_msg_from_content(uint8_t* content, uint64_t bit_len)
 {
-	t_list*	msg = NULL;
-	size_t	bit_index = 0;
-	uint64_t len = strlen(content), bit_len = len * 8;
+	t_list*		msg = NULL;
+	size_t		bit_index = 0;
 	
 	bool	is_marked = false;
 	while ((bit_len + !is_marked) > 448) {
@@ -90,7 +89,7 @@ t_list* get_msg_from_content(char* content)
 			mark_chunk(chunk.bytes, bits_put);
 			is_marked = true;
 		}
-		chunk.len.it = endian64(len * 8);
+		chunk.len.it = endian64(bit_len);
 	
 		addback_element(&msg, new_element(chunk));
 	}

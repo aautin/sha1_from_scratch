@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "chunk.h"
@@ -25,13 +26,11 @@ int main(int argc, char** argv)
 			if (content == NULL)
 				perror(file);
 			else {
-				t_list*	message = get_msg_from_content(content);
-
 				uint32_t	hash[5];
-				sha1(message, hash);
-				
-				printf("%08x%08x%08x%08x%08x  %s\n", hash[0], hash[1], hash[2], hash[3], hash[4], file);
-				list_clear(&message);
+				if (!sha1((uint8_t*) content, (uint64_t) strlen(content) * 8, hash))
+					perror(file);
+				else
+					printf("%08x%08x%08x%08x%08x  %s\n", hash[0], hash[1], hash[2], hash[3], hash[4], file);
 			}
 			free(content);
 		}

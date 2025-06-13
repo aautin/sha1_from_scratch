@@ -27,7 +27,7 @@ void define_chunk_words(uint32_t* words)
 	}
 }
 
-void sha1(t_list *msg, t_sha1 hash)
+void sha1(t_list *msg, uint32_t* hash)
 {
 	hash[0] = 0x67452301;
 	hash[1] = 0xefcdab89;

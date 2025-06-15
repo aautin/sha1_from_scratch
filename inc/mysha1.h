@@ -1,5 +1,5 @@
-#ifndef SHA1_H
-# define SHA1_H
+#ifndef MYSHA1_H
+# define MYSHA1_H
 
 # include <stdbool.h>
 # include <stddef.h>

@@ -7,7 +7,7 @@
 #include "chunk.h"
 #include "endian.h"
 #include "parsing.h"
-#include "sha1.h"
+#include "mysha1.h"
 
 #include "debug.h"
 

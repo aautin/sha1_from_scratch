@@ -2,7 +2,7 @@
 
 #include "endian.h"
 #include "parsing.h"
-#include "sha1.h"
+#include "mysha1.h"
 
 uint32_t choice(uint32_t b, uint32_t c, uint32_t d)
 {

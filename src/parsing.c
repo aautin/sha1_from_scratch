@@ -56,8 +56,9 @@ size_t put_bits_in_chunk(uint8_t* chunk, uint8_t* src, size_t index_from, size_t
 	return index;
 }
 
-t_list* get_msg_from_content(uint8_t* content, uint64_t bit_len)
+t_list* get_msg_from_content(uint8_t* content, uint64_t original_bit_len)
 {
+	uint64_t	bit_len = original_bit_len;
 	t_list*		msg = NULL;
 	size_t		bit_index = 0;
 	
@@ -89,7 +90,7 @@ t_list* get_msg_from_content(uint8_t* content, uint64_t bit_len)
 			mark_chunk(chunk.bytes, bits_put);
 			is_marked = true;
 		}
-		chunk.len.it = endian64(bit_len);
+		chunk.len.it = endian64(original_bit_len);
 	
 		addback_element(&msg, new_element(chunk));
 	}

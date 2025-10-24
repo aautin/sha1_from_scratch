@@ -10,7 +10,7 @@
 #include "list.h"
 #include "parsing.h"
 
-char* get_content_from_fd(int fd)
+char* get_content_from_fd(int fd, ssize_t *size)
 {
 	struct stat	stats;
 	fstat(fd, &stats);
@@ -26,6 +26,7 @@ char* get_content_from_fd(int fd)
 	}
 	content[read_chars] = '\0';
 
+	*size = read_chars;
 	return content;
 }
 
